@@ -116,7 +116,7 @@ export default function CaseStudies() {
   const cases = useMemo(() => {
     return RHYTHMS.map((r, idx) => ({
       id: r.id,
-      title: `Case Study ${idx + 1}`,
+      title: `Case Study ${idx + 1}: ${r.tag}`,
       rhythmName: r.name,
       meta: `#${idx + 1} • ${r.tag}`,
       scenarioImage: rhythmToScenarioPath(r.id),
@@ -282,17 +282,22 @@ export default function CaseStudies() {
         </aside>
 
         <main className="cs-center">
-          <div className="cs-title-row">
+          <div>
             <h2 className="cs-title">{active.title}</h2>
-            <div className="cs-meta">{active.meta}</div>
+          <p
+              style={{
+              fontSize: "12px",
+              color: "#999",
+              marginTop: "6px",
+              marginBottom: "16px",
+              }}
+            >
+              Disclaimer: All patient names and scenarios are fictional and intended for educational purposes only.
+          </p>
           </div>
 
           <div className="cs-view" role="region" aria-label="Case study viewer">
             {renderCanvasContent()}
-          </div>
-
-          <div className="cs-rhythm-line">
-            Rhythm: <span>{active.rhythmName}</span>
           </div>
         </main>
 
