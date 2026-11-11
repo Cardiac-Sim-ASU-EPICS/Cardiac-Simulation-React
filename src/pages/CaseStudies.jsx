@@ -284,16 +284,16 @@ export default function CaseStudies() {
         <main className="cs-center">
           <div>
             <h2 className="cs-title">{active.title}</h2>
-          <p
+            <p
               style={{
-              fontSize: "12px",
-              color: "#999",
-              marginTop: "6px",
-              marginBottom: "16px",
+                fontSize: "12px",
+                color: "#999",
+                marginTop: "6px",
+                marginBottom: "16px",
               }}
             >
               Disclaimer: All patient names and scenarios are fictional and intended for educational purposes only.
-          </p>
+            </p>
           </div>
 
           <div className="cs-view" role="region" aria-label="Case study viewer">
