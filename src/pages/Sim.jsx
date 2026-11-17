@@ -19,6 +19,9 @@ function SimulatorWaveform({ rhythm }) {
   const [isPlaying, setIsPlaying] = useState(true);
   const [speed, setSpeed] = useState(1);
   const [resetKey, setResetKey] = useState(0);
+  const displayedBpm = rhythm.id === "ventricular-tachycardia"
+    ? { type: "fixed", value: 220 }
+    : rhythm.bpm;
 
   function resetWaveform() {
     setIsPlaying(true);
@@ -35,7 +38,7 @@ function SimulatorWaveform({ rhythm }) {
         </div>
         <div className="sim-waveform-panel__readout">
           <span>{rhythm.tag}</span>
-          <strong>{formatBpm(rhythm.bpm)}</strong>
+          <strong>{formatBpm(displayedBpm)}</strong>
         </div>
       </div>
 
