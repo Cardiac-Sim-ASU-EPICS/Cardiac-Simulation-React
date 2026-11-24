@@ -508,12 +508,72 @@ body{
   line-height:1.65;
 }
 
+.real-time-start-card__sound-note{
+  margin:-10px 0 18px;
+  color:rgba(255,212,121,0.78);
+  font-size:12px;
+  font-weight:650;
+}
+
 .real-time-start-card__button{
   width:100%;
   min-height:48px;
   border-color:rgba(255,212,121,0.24);
   background:linear-gradient(135deg, rgba(90,34,49,0.92), rgba(125,49,71,0.88));
   font-weight:800;
+}
+
+.real-time-sound-toggle{
+  min-height:36px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:8px 11px;
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:999px;
+  background:rgba(0,0,0,0.25);
+  color:rgba(255,255,255,0.72);
+  font:inherit;
+  font-size:12px;
+  font-weight:750;
+  cursor:pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.real-time-sound-toggle:hover:not(:disabled){
+  border-color:rgba(126,240,165,0.30);
+  background:rgba(255,255,255,0.07);
+  color:#fff;
+}
+
+.real-time-sound-toggle--active{
+  border-color:rgba(126,240,165,0.24);
+  background:rgba(126,240,165,0.09);
+  color:#7ef0a5;
+}
+
+.real-time-sound-toggle:focus-visible{
+  outline:2px solid rgba(126,240,165,0.72);
+  outline-offset:3px;
+}
+
+.real-time-sound-toggle:disabled{
+  cursor:not-allowed;
+  opacity:0.48;
+}
+
+.real-time-sound-toggle svg{
+  width:16px;
+  height:16px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
 }
 
 .real-time-countdown{

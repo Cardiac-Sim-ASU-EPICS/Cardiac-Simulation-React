@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import ECGWaveform from "../components/ECGWaveform.jsx";
 import { REAL_TIME_SCENARIOS } from "../data/realTimeScenarios.js";
+import useScenarioAudio from "../hooks/useScenarioAudio.js";
 
 const STATUS_STYLES = {
   stable: {
@@ -111,6 +112,7 @@ export default function RealTimeMode() {
   // Start button and countdown
   const [hasStarted, setHasStarted] = useState(false);
   const [countdown, setCountdown] = useState(null);
+  const [soundEnabled, setSoundEnabled] = useState(true);
   // Tracks new attempts so answers reshuffle on restart
   const [attemptNumber, setAttemptNumber] = useState(0);
   const currentStep =
@@ -118,6 +120,13 @@ export default function RealTimeMode() {
     selectedScenario?.steps?.[selectedScenario.initialStepId];
   const statusStyle = STATUS_STYLES[simulationState.patientStatus] || STATUS_STYLES.stable;
   const isScenarioFinished = simulationState.outcome !== null;
+  const scenarioAudio = useScenarioAudio({
+    enabled: soundEnabled,
+    isActive: hasStarted && countdown === 0,
+    outcome: simulationState.outcome,
+    rhythmId: simulationState.currentRhythmId,
+    secondsLeft: simulationState.secondsLeft,
+  });
   // Shuffle the answer choices for each question and new attempt
   const shuffledActions = useMemo(
     () => shuffleActions(currentStep?.actions || []),
@@ -188,14 +197,27 @@ export default function RealTimeMode() {
 }, [countdown]);
   // Start simulation and begin countdown
   function handleStartSimulation() {
+    if (soundEnabled) scenarioAudio.primeAudio();
     setHasStarted(true);
     setCountdown(3);
+  }
+
+  function handleToggleSound() {
+    const nextEnabled = !soundEnabled;
+    setSoundEnabled(nextEnabled);
+
+    if (nextEnabled) {
+      scenarioAudio.primeAudio();
+    } else {
+      scenarioAudio.silenceAudio();
+    }
   }
 
   function handleScenarioChange(scenarioId) {
     const nextScenario =
       REAL_TIME_SCENARIOS.find((scenario) => scenario.id === scenarioId) || REAL_TIME_SCENARIOS[0];
 
+    scenarioAudio.silenceAudio();
     setSimulationState(buildInitialState(nextScenario));
     setHasStarted(false);
     setCountdown(null);
@@ -203,6 +225,8 @@ export default function RealTimeMode() {
   }
 
   function handleRestartScenario() {
+    scenarioAudio.silenceAudio();
+    if (soundEnabled) scenarioAudio.primeAudio();
     setSimulationState(buildInitialState(selectedScenario));
     setAttemptNumber((currentAttempt) => currentAttempt + 1);
   }
@@ -270,6 +294,33 @@ export default function RealTimeMode() {
               >
                 Status | {statusStyle.label}
               </div>
+              <button
+                type="button"
+                className={`real-time-sound-toggle${
+                  soundEnabled ? " real-time-sound-toggle--active" : ""
+                }`}
+                onClick={handleToggleSound}
+                aria-pressed={soundEnabled}
+                disabled={!scenarioAudio.isSupported}
+                title={
+                  scenarioAudio.isSupported
+                    ? `${soundEnabled ? "Mute" : "Enable"} scenario sounds`
+                    : "Scenario sounds are not supported in this browser"
+                }
+              >
+                {soundEnabled ? (
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 10v4h3l4 3V7l-4 3H5Z" />
+                    <path d="M16 9.5c1.4 1.4 1.4 3.6 0 5M18.5 7c2.8 2.8 2.8 7.2 0 10" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 10v4h3l4 3V7l-4 3H5Z" />
+                    <path d="m16 10 4 4M20 10l-4 4" />
+                  </svg>
+                )}
+                <span>{scenarioAudio.isSupported ? `Sound ${soundEnabled ? "on" : "off"}` : "No audio"}</span>
+              </button>
             </div>
           </div>
 
@@ -293,6 +344,13 @@ export default function RealTimeMode() {
                   Each action has a visible countdown. If time expires, the patient may
                   deteriorate and the scenario will advance or end.
                 </p>
+                <div className="real-time-start-card__sound-note">
+                  {scenarioAudio.isSupported
+                    ? soundEnabled
+                      ? "Monitor and urgency sounds are on."
+                      : "Sound is off. You can enable it above."
+                    : "This browser does not support scenario audio."}
+                </div>
                 <button
                   type="button"
                   className="sidebar__btn real-time-start-card__button"
