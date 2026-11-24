@@ -53,6 +53,53 @@ function buildInitialState(scenario) {
   };
 }
 
+function DecisionTimer({ secondsLeft, timeLimit, isFinished }) {
+  const safeTimeLimit = Math.max(timeLimit || 1, 1);
+  const progress = isFinished
+    ? 0
+    : Math.max(0, Math.min(100, (secondsLeft / safeTimeLimit) * 100));
+  const urgency = isFinished
+    ? "finished"
+    : secondsLeft <= 5
+      ? "critical"
+      : secondsLeft <= 10
+        ? "warning"
+        : "active";
+  const statusText = isFinished
+    ? "Scenario ended"
+    : urgency === "critical"
+      ? "Act now"
+      : urgency === "warning"
+        ? "Time running out"
+        : "Choose an action";
+
+  return (
+    <div
+      className={`decision-timer decision-timer--${urgency}`}
+      role="timer"
+      aria-label={`${secondsLeft} seconds remaining. ${statusText}.`}
+      style={{ "--decision-progress": `${progress}%` }}
+    >
+      <div className="decision-timer__content">
+        <svg className="decision-timer__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="13" r="8" />
+          <path d="M12 9v4l2.6 1.7M9 3h6M12 3v2" />
+        </svg>
+        <div className="decision-timer__copy">
+          <span>{statusText}</span>
+          <div className="decision-timer__value">
+            <strong>{secondsLeft}</strong>
+            <small>sec</small>
+          </div>
+        </div>
+      </div>
+      <div className="decision-timer__track" aria-hidden="true">
+        <div className="decision-timer__bar" />
+      </div>
+    </div>
+  );
+}
+
 export default function RealTimeMode() {
   const [selectedScenarioId, setSelectedScenarioId] = useState(REAL_TIME_SCENARIOS[0]?.id ?? "");
   const selectedScenario = useMemo(
@@ -223,7 +270,6 @@ export default function RealTimeMode() {
               >
                 Status | {statusStyle.label}
               </div>
-              <div className="badge">Timer | {simulationState.secondsLeft}s</div>
             </div>
           </div>
 
@@ -233,37 +279,35 @@ export default function RealTimeMode() {
             style={{ minHeight: 560, padding: 24, background: "#121218" }}
           >
           {!hasStarted ? (
-            <div
-              style={{
-                width: "100%",
-                minHeight: 512,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-            <button
-              type="button"
-              className="sidebar__btn"
-              onClick={handleStartSimulation}
-            >
-              Start
-            </button>
-          </div>
-        ) : countdown > 0 ? (
-          <div
-            style={{
-                width: "100%",
-                minHeight: 512,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 72,
-                fontWeight: 700,
-              }}
-              >
-                {countdown}
+            <div className="real-time-start-screen">
+              <div className="real-time-start-card">
+                <div className="real-time-start-card__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="13" r="8" />
+                    <path d="M12 9v4l2.6 1.7M9 3h6M12 3v2" />
+                  </svg>
+                </div>
+                <div className="real-time-start-card__eyebrow">Timed decision scenario</div>
+                <h3>Be ready to act quickly</h3>
+                <p>
+                  Each action has a visible countdown. If time expires, the patient may
+                  deteriorate and the scenario will advance or end.
+                </p>
+                <button
+                  type="button"
+                  className="sidebar__btn real-time-start-card__button"
+                  onClick={handleStartSimulation}
+                >
+                  Start timed scenario
+                </button>
               </div>
+            </div>
+        ) : countdown > 0 ? (
+          <div className="real-time-countdown" aria-live="assertive">
+            <span>Get ready</span>
+            <strong>{countdown}</strong>
+            <p>The decision timer starts when this countdown ends.</p>
+          </div>
             ) : (
             <div
               style={{
@@ -339,75 +383,53 @@ export default function RealTimeMode() {
                   ) : null}
                 </div>
 
-                <div
-                  style={{
-                    borderRadius: 18,
-                    border: "1px solid rgba(255,255,255,0.10)",
-                    background: "rgba(255,255,255,0.04)",
-                    padding: 18,
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 12,
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: "rgba(255,255,255,0.5)",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.14em",
-                    }}
-                  >
-                    Action Panel
+                <div className="real-time-action-panel">
+                  <div className="real-time-action-panel__header">
+                    <div className="real-time-action-panel__heading">
+                      <span>Action Panel</span>
+                      <strong>Choose the next best action</strong>
+                    </div>
+
+                    <DecisionTimer
+                      secondsLeft={simulationState.secondsLeft}
+                      timeLimit={currentStep.timeLimit}
+                      isFinished={isScenarioFinished}
+                    />
                   </div>
 
-                  {isScenarioFinished ? (
-                    <div
-                      style={{
-                        borderRadius: 16,
-                        border: "1px solid rgba(255,255,255,0.10)",
-                        background: "rgba(0,0,0,0.18)",
-                        padding: 16,
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 10,
-                      }}
-                    >
-                      <div style={{ fontSize: 22, fontWeight: 700 }}>
-                        {simulationState.outcome === "success" ? "Scenario Success" : "Scenario Failed"}
+                  <div className="real-time-action-panel__choices">
+                    {isScenarioFinished ? (
+                      <div className="real-time-outcome-card">
+                        <div style={{ fontSize: 22, fontWeight: 700 }}>
+                          {simulationState.outcome === "success" ? "Scenario Success" : "Scenario Failed"}
+                        </div>
+                        <div style={{ color: "rgba(255,255,255,0.76)", lineHeight: 1.6 }}>
+                          {simulationState.outcome === "success"
+                            ? "Your decisions improved patient status and moved the case toward a stable rhythm."
+                            : "The patient deteriorated because the scenario was not managed appropriately in time."}
+                        </div>
+                        <button
+                          type="button"
+                          className="sidebar__btn"
+                          style={{ marginTop: 4 }}
+                          onClick={handleRestartScenario}
+                        >
+                          Restart Scenario
+                        </button>
                       </div>
-                      <div style={{ color: "rgba(255,255,255,0.76)", lineHeight: 1.6 }}>
-                        {simulationState.outcome === "success"
-                          ? "Your decisions improved patient status and moved the case toward a stable rhythm."
-                          : "The patient deteriorated because the scenario was not managed appropriately in time."}
-                      </div>
-                      <button
-                        type="button"
-                        className="sidebar__btn"
-                        style={{ marginTop: 4 }}
-                        onClick={handleRestartScenario}
-                      >
-                        Restart Scenario
-                      </button>
-                    </div>
-                  ) : (
-                    shuffledActions.map((action) => (
-                      <button
-                        key={action.id}
-                        type="button"
-                        className="sidebar__btn"
-                        style={{
-                          marginTop: 0,
-                          textAlign: "left",
-                          padding: "14px 16px",
-                          background: "rgba(255,255,255,0.06)",
-                        }}
-                        onClick={() => handleAction(action)}
-                      >
-                        {action.label}
-                      </button>
-                    ))
-                  )}
+                    ) : (
+                      shuffledActions.map((action) => (
+                        <button
+                          key={action.id}
+                          type="button"
+                          className="sidebar__btn real-time-action-choice"
+                          onClick={() => handleAction(action)}
+                        >
+                          {action.label}
+                        </button>
+                      ))
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

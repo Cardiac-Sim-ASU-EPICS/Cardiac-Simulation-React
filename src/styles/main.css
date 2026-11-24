@@ -444,6 +444,306 @@ body{
   font-size: 13px;
 }
 
+/* Real Time Mode decision timer */
+.real-time-start-screen{
+  width:100%;
+  min-height:512px;
+  display:grid;
+  place-items:center;
+  padding:24px;
+}
+
+.real-time-start-card{
+  width:min(500px, 100%);
+  padding:30px;
+  border:1px solid rgba(255,255,255,0.11);
+  border-radius:22px;
+  background:
+    radial-gradient(420px 220px at 50% 0%, rgba(125,49,71,0.24), transparent 68%),
+    rgba(255,255,255,0.035);
+  text-align:center;
+  box-shadow:0 18px 45px rgba(0,0,0,0.28);
+}
+
+.real-time-start-card__icon{
+  width:58px;
+  height:58px;
+  margin:0 auto 16px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,212,121,0.26);
+  border-radius:18px;
+  background:rgba(255,212,121,0.10);
+  color:#ffd479;
+}
+
+.real-time-start-card__icon svg{
+  width:30px;
+  height:30px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.real-time-start-card__eyebrow{
+  margin-bottom:8px;
+  color:#ffd479;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+}
+
+.real-time-start-card h3{
+  margin:0;
+  font-family:var(--font-display);
+  font-size:30px;
+}
+
+.real-time-start-card p{
+  margin:12px auto 22px;
+  color:rgba(255,255,255,0.70);
+  line-height:1.65;
+}
+
+.real-time-start-card__button{
+  width:100%;
+  min-height:48px;
+  border-color:rgba(255,212,121,0.24);
+  background:linear-gradient(135deg, rgba(90,34,49,0.92), rgba(125,49,71,0.88));
+  font-weight:800;
+}
+
+.real-time-countdown{
+  width:100%;
+  min-height:512px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.real-time-countdown span{
+  color:#ffd479;
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+}
+
+.real-time-countdown strong{
+  margin:8px 0;
+  font-family:var(--font-display);
+  font-size:clamp(80px, 11vw, 126px);
+  line-height:1;
+  text-shadow:0 0 34px rgba(255,212,121,0.18);
+}
+
+.real-time-countdown p{
+  margin:0;
+  color:rgba(255,255,255,0.62);
+}
+
+.real-time-action-panel{
+  min-width:0;
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:18px;
+  background:rgba(255,255,255,0.04);
+  overflow:hidden;
+}
+
+.real-time-action-panel__header{
+  display:flex;
+  align-items:stretch;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  background:rgba(0,0,0,0.14);
+}
+
+.real-time-action-panel__heading{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:5px;
+}
+
+.real-time-action-panel__heading span{
+  color:rgba(255,255,255,0.5);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+}
+
+.real-time-action-panel__heading strong{
+  color:rgba(255,255,255,0.88);
+  font-size:14px;
+  line-height:1.35;
+}
+
+.real-time-action-panel__choices{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:14px;
+}
+
+.real-time-action-choice{
+  margin-top:0;
+  padding:14px 16px;
+  background:rgba(255,255,255,0.06);
+  text-align:left;
+}
+
+.real-time-outcome-card{
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:16px;
+  background:rgba(0,0,0,0.18);
+}
+
+.decision-timer{
+  --decision-color:#d9d1d4;
+  --decision-soft:rgba(217,209,212,0.10);
+  width:168px;
+  flex:0 0 168px;
+  align-self:stretch;
+  border:1px solid color-mix(in srgb, var(--decision-color) 34%, transparent);
+  border-radius:15px;
+  background:var(--decision-soft);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,0.025);
+  overflow:hidden;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.decision-timer--warning{
+  --decision-color:#ffd479;
+  --decision-soft:rgba(255,212,121,0.10);
+  box-shadow:0 0 24px rgba(255,179,107,0.08);
+}
+
+.decision-timer--critical{
+  --decision-color:#ff8f8f;
+  --decision-soft:rgba(255,100,100,0.13);
+  box-shadow:0 0 28px rgba(255,100,100,0.17);
+  animation:decision-timer-pulse 1s ease-in-out infinite;
+}
+
+.decision-timer--finished{
+  --decision-color:rgba(255,255,255,0.48);
+  --decision-soft:rgba(255,255,255,0.045);
+}
+
+.decision-timer__content{
+  min-height:78px;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.decision-timer__icon{
+  width:23px;
+  height:23px;
+  flex:0 0 auto;
+  fill:none;
+  stroke:var(--decision-color);
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.decision-timer__copy{
+  min-width:0;
+}
+
+.decision-timer__copy > span{
+  display:block;
+  margin-bottom:2px;
+  color:var(--decision-color);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+.decision-timer__value{
+  display:flex;
+  align-items:baseline;
+  gap:4px;
+  color:#fff;
+  font-variant-numeric:tabular-nums;
+}
+
+.decision-timer__value strong{
+  font-size:30px;
+  line-height:1;
+}
+
+.decision-timer__value small{
+  color:rgba(255,255,255,0.58);
+  font-size:11px;
+  font-weight:700;
+  text-transform:uppercase;
+}
+
+.decision-timer__track{
+  height:6px;
+  background:rgba(0,0,0,0.26);
+  overflow:hidden;
+}
+
+.decision-timer__bar{
+  width:var(--decision-progress);
+  height:100%;
+  background:var(--decision-color);
+  box-shadow:0 0 12px color-mix(in srgb, var(--decision-color) 55%, transparent);
+  transition:width 380ms linear, background 180ms ease;
+}
+
+@keyframes decision-timer-pulse{
+  0%, 100%{
+    transform:scale(1);
+    box-shadow:0 0 20px rgba(255,100,100,0.10);
+  }
+  50%{
+    transform:scale(1.018);
+    box-shadow:0 0 30px rgba(255,100,100,0.24);
+  }
+}
+
+@media (max-width: 620px){
+  .real-time-action-panel__header{
+    flex-direction:column;
+  }
+  .decision-timer{
+    width:100%;
+    flex-basis:auto;
+  }
+  .decision-timer__content{
+    min-height:68px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .decision-timer--critical{
+    animation:none;
+  }
+}
+
 /* Rhythm simulator media layout (scoped to avoid Real Time Mode) */
 .sim-media-grid{
   margin-top: 14px;
@@ -455,6 +755,176 @@ body{
 
 .sim-video-panel{
   width:100%;
+  isolation:isolate;
+  transition:
+    border-radius 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.sim-video-toolbar{
+  position:absolute;
+  z-index:3;
+  top:14px;
+  right:14px;
+  left:14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  pointer-events:none;
+}
+
+.sim-video-toolbar__actions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:8px;
+  min-width:0;
+  pointer-events:auto;
+}
+
+.sim-video-speed,
+.sim-video-label,
+.sim-video-fullscreen-button{
+  min-height:40px;
+  border:1px solid rgba(255,255,255,0.14);
+  background:rgba(12,12,17,0.62);
+  color:rgba(255,255,255,0.92);
+  box-shadow:0 8px 24px rgba(0,0,0,0.18);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+
+.sim-video-speed{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 7px 6px 12px;
+  border-radius:999px;
+  font-size:13px;
+  pointer-events:auto;
+}
+
+.sim-video-speed span{
+  color:rgba(255,255,255,0.76);
+}
+
+.sim-video-speed select{
+  border:1px solid rgba(255,255,255,0.14);
+  border-radius:999px;
+  background:rgba(255,255,255,0.10);
+  color:rgba(255,255,255,0.94);
+  padding:5px 9px;
+  font:inherit;
+  cursor:pointer;
+}
+
+.sim-video-speed option{
+  color:#111;
+}
+
+.sim-video-label{
+  display:inline-flex;
+  align-items:center;
+  padding:8px 12px;
+  border-radius:999px;
+  font-size:12px;
+  white-space:nowrap;
+}
+
+.sim-video-fullscreen-button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:8px 12px;
+  border-radius:999px;
+  font:inherit;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.sim-video-fullscreen-button:hover{
+  border-color:rgba(126,240,165,0.42);
+  background:rgba(29,68,48,0.82);
+  transform:translateY(-1px);
+}
+
+.sim-video-fullscreen-button:focus-visible{
+  outline:2px solid #7ef0a5;
+  outline-offset:3px;
+}
+
+.sim-video-fullscreen-button svg{
+  width:16px;
+  height:16px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.sim-video-fullscreen-hint{
+  position:absolute;
+  z-index:3;
+  right:50%;
+  bottom:18px;
+  transform:translateX(50%);
+  padding:7px 11px;
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:999px;
+  background:rgba(10,10,15,0.62);
+  color:rgba(255,255,255,0.66);
+  font-size:12px;
+  white-space:nowrap;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+
+.canvas.sim-video-panel--fullscreen,
+.canvas.sim-video-panel:fullscreen,
+.canvas.sim-video-panel:-webkit-full-screen{
+  position:fixed;
+  z-index:1000;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  max-width:none;
+  max-height:none;
+  margin:0;
+  padding:clamp(12px, 2vw, 28px);
+  border:0;
+  border-radius:0;
+  background:#08080c;
+  box-shadow:none;
+}
+
+.sim-video-panel--fullscreen .canvas__video,
+.sim-video-panel:fullscreen .canvas__video,
+.sim-video-panel:-webkit-full-screen .canvas__video{
+  width:100%;
+  height:100%;
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+}
+
+.sim-video-panel--fullscreen::after,
+.sim-video-panel:fullscreen::after,
+.sim-video-panel:-webkit-full-screen::after{
+  border-radius:0;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,0.05);
+}
+
+body.animation-fullscreen-open{
+  overflow:hidden;
 }
 
 .sim-waveform-panel{
@@ -774,6 +1244,23 @@ body{
 }
 
 @media (max-width: 520px){
+  .sim-video-toolbar{
+    align-items:flex-start;
+  }
+  .sim-video-toolbar__actions{
+    flex-direction:column-reverse;
+    align-items:flex-end;
+  }
+  .sim-video-label{
+    display:none;
+  }
+  .sim-video-fullscreen-button span{
+    display:none;
+  }
+  .sim-video-fullscreen-button{
+    width:40px;
+    padding:8px;
+  }
   .rhythm-education__heading,
   .rhythm-education__content{
     padding-left:14px;
