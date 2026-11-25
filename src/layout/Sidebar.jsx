@@ -37,10 +37,6 @@ export default function Sidebar({ rhythms, activeId, collapsed, onToggleCollapse
           {collapsed ? "Expand sidebar" : "Collapse sidebar"}
         </button>
       </div>
-
-      <div className="sidebar__footer">
-        <div className="sidebar__tiny">Design Layout Prototype</div>
-      </div>
     </aside>
   );
 }

@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <section className="page">
       <div className="home-center">
-        <h1 className="home-title">Scottsdale Fire Dept.</h1>
+        <h1 className="home-title">Scottsdale Fire Department</h1>
         <p className="home-subtitle">Cardiac Simulator Learning Tool</p>
 
         <div className="home-tiles" role="list" aria-label="Main sections">
