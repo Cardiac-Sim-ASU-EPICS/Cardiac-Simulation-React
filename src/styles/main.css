@@ -143,14 +143,9 @@ body{
   backdrop-filter: blur(16px);
   box-shadow: var(--shadow);
   overflow-x:hidden;
-  overflow-y:auto;
-  scrollbar-width:none;
+  overflow-y:hidden;
   display:flex;
   flex-direction:column;
-}
-
-.sidebar::-webkit-scrollbar{
-  display:none;
 }
 
 .sidebar__section{
@@ -1596,6 +1591,169 @@ body.animation-fullscreen-open{
 /* Optional: keep active item highlight looking good */
 .app--collapsed .sideitem--active {
   box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset;
+}
+
+/* Keep the sidebar in one vertical column while fitting every destination in
+   the available viewport height. Short screens progressively tighten the rail
+   instead of adding an internal scrollbar or changing to a multi-column grid. */
+@media (max-height: 1000px){
+  .sidebar__section{
+    padding: clamp(5px, 1vh, 10px);
+  }
+
+  .sidebar__section:first-child{
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar__label{
+    margin-bottom: clamp(3px, 0.6vh, 7px);
+    font-size: clamp(8px, 1.25vh, 11px);
+  }
+
+  .sidebar__list,
+  .app--collapsed .sidebar__list{
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2px, 0.65vh, 6px);
+  }
+
+  .sideitem,
+  .app--collapsed .sideitem{
+    flex: 1 1 0;
+    min-height: 0;
+    justify-content: center;
+    padding: clamp(2px, 0.65vh, 7px) 5px;
+    border-radius: 10px;
+  }
+
+  .sideitem__name{
+    display: none;
+  }
+
+  .sideitem__tag,
+  .app--collapsed .sideitem__tag{
+    min-width: 54px;
+    margin: 0;
+    padding: clamp(2px, 0.45vh, 4px) 5px;
+    justify-content: center;
+    font-size: clamp(8px, 1.35vh, 11px);
+    line-height: 1;
+  }
+
+  .sidebar__section--explore,
+  .app--collapsed .sidebar__section--explore{
+    flex: 0 0 auto;
+    padding: clamp(5px, 0.8vh, 9px);
+  }
+
+  .sidebar-nav{
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2px, 0.5vh, 5px);
+  }
+
+  .sidebar-navitem,
+  .app--collapsed .sidebar-navitem{
+    min-height: clamp(28px, 5.2vh, 42px);
+    flex-direction: row;
+    justify-content: center;
+    gap: 5px;
+    padding: clamp(3px, 0.6vh, 6px) 3px;
+    border-radius: 10px;
+  }
+
+  .sidebar-navitem:hover,
+  .app--collapsed .sidebar-navitem:hover{
+    transform: translateY(-1px);
+  }
+
+  .sidebar-navitem__icon,
+  .app--collapsed .sidebar-navitem__icon{
+    width: clamp(14px, 2.5vh, 20px);
+    height: clamp(14px, 2.5vh, 20px);
+    flex-basis: clamp(14px, 2.5vh, 20px);
+  }
+
+  .app--collapsed .sidebar-navitem__short{
+    font-size: clamp(7px, 1.15vh, 9px);
+  }
+
+  .sidebar__section--quick{
+    flex: 0 0 auto;
+    margin-top: 0;
+  }
+
+  .sidebar__section--quick .sidebar__btn,
+  .app--collapsed .sidebar__section--quick .sidebar__btn{
+    min-height: clamp(27px, 4.8vh, 38px);
+    margin-top: clamp(2px, 0.45vh, 5px);
+    padding: clamp(3px, 0.55vh, 7px) 4px;
+    font-size: clamp(8px, 1.3vh, 11px);
+    line-height: 1.1;
+  }
+}
+
+@media (max-height: 520px){
+  .sidebar__label{
+    display: none;
+  }
+
+  .sidebar__section{
+    padding: 4px;
+  }
+
+  .sidebar__list,
+  .app--collapsed .sidebar__list{
+    gap: 2px;
+  }
+
+  .sidebar__section--explore,
+  .app--collapsed .sidebar__section--explore{
+    padding: 4px;
+  }
+
+  .sidebar-nav{
+    gap: 2px;
+  }
+
+  .sidebar-navitem,
+  .app--collapsed .sidebar-navitem{
+    min-height: 24px;
+    padding: 2px;
+  }
+
+  .sidebar__section--quick .sidebar__btn,
+  .app--collapsed .sidebar__section--quick .sidebar__btn{
+    min-height: 24px;
+    margin-top: 2px;
+    padding: 2px;
+  }
+}
+
+@media (max-width: 860px){
+  .brand__stack{
+    display: none;
+  }
+
+  .body{
+    grid-template-columns: minmax(230px, 300px) minmax(0, 1fr);
+  }
+
+  .app--collapsed .body{
+    grid-template-columns: 110px minmax(0, 1fr);
+  }
+
+  .sidebar{
+    position: sticky;
+    top: 72px;
+    height: calc(100vh - 104px);
+    height: calc(100dvh - 104px);
+  }
 }
 
 .canvas {
