@@ -20,6 +20,8 @@ const RHYTHM_AUDIO_PROFILES = {
 };
 
 const DEFAULT_PROFILE = { bpm: 80, frequency: 840 };
+const SCENARIO_VOLUME_MULTIPLIER = 4;
+const MAX_SCENARIO_VOLUME = 0.3;
 
 export default function useScenarioAudio({
   enabled,
@@ -66,11 +68,12 @@ export default function useScenarioAudio({
     const startTime = context.currentTime + offset;
     const oscillator = context.createOscillator();
     const gain = context.createGain();
+    const audibleVolume = Math.min(volume * SCENARIO_VOLUME_MULTIPLIER, MAX_SCENARIO_VOLUME);
 
     oscillator.type = type;
     oscillator.frequency.setValueAtTime(frequency, startTime);
     gain.gain.setValueAtTime(0.0001, startTime);
-    gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.008);
+    gain.gain.exponentialRampToValueAtTime(audibleVolume, startTime + 0.008);
     gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
 
     oscillator.connect(gain);
