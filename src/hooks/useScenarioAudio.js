@@ -20,8 +20,8 @@ const RHYTHM_AUDIO_PROFILES = {
 };
 
 const DEFAULT_PROFILE = { bpm: 80, frequency: 840 };
-const SCENARIO_VOLUME_MULTIPLIER = 4;
-const MAX_SCENARIO_VOLUME = 0.3;
+const SCENARIO_VOLUME_MULTIPLIER = 12;
+const MAX_SCENARIO_VOLUME = 0.85;
 
 export default function useScenarioAudio({
   enabled,
