@@ -1,5 +1,26 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+
+const EXPLORE_LINKS = [
+  {
+    to: "/ekg-waveforms",
+    label: "EKG Waveforms",
+    shortLabel: "EKG",
+    icon: "/assets/icon-ekg-waveforms.svg",
+  },
+  {
+    to: "/case-studies",
+    label: "Case Studies",
+    shortLabel: "Cases",
+    icon: "/assets/icon-case-studies.svg",
+  },
+  {
+    to: "/reviews",
+    label: "Reviews",
+    shortLabel: "Review",
+    icon: "/assets/icon-reviews.svg",
+  },
+];
 
 export default function Sidebar({ rhythms, activeId, collapsed, onToggleCollapsed }) {
   const navigate = useNavigate();
@@ -24,7 +45,31 @@ export default function Sidebar({ rhythms, activeId, collapsed, onToggleCollapse
         </div>
       </div>
 
-      <div className="sidebar__section">
+      <div className="sidebar__section sidebar__section--explore">
+        <div className="sidebar__label">Explore</div>
+
+        <nav className="sidebar-nav" aria-label="Learning sections">
+          {EXPLORE_LINKS.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                `sidebar-navitem${isActive ? " sidebar-navitem--active" : ""}`
+              }
+              aria-label={item.label}
+              title={collapsed ? item.label : undefined}
+            >
+              <img className="sidebar-navitem__icon" src={item.icon} alt="" />
+              <span className="sidebar-navitem__label">{item.label}</span>
+              <span className="sidebar-navitem__short" aria-hidden="true">
+                {item.shortLabel}
+              </span>
+            </NavLink>
+          ))}
+        </nav>
+      </div>
+
+      <div className="sidebar__section sidebar__section--quick">
         <div className="sidebar__label">Quick tools</div>
         <button className="sidebar__btn" type="button" onClick={() => navigate("/")}>
           Go Home
